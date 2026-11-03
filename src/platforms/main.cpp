@@ -3,24 +3,39 @@
 #include <imgui.h>
 #include <rlImGui.h>
 
-int main() {
+#include <mainGame.hpp>
 
+void configRaylib() {
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(800, 400, "Window");
+  SetExitKey(KEY_NULL);
+  SetTargetFPS(240);
+}
+
+int main() {
+#if PRODUCTION_BUILD == 1
+  SetTraceLogLevel(LOG_NONE); // No log if production build
+#endif
+
+  configRaylib();
 
   rlImGuiSetup(true);
+
+  if (!gameInit()) {
+    return 1;
+  }
 
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
-
     rlImGuiBegin();
-    DrawText("Test", 190, 200, 20, RED);
 
-    DrawRectangle(50, 50, 100, 100, {255, 0, 0, 127});
-    DrawRectangle(75, 75, 100, 100, {0, 255, 0, 127});
+    if (!gameUpdate()) {
+      CloseWindow();
+    }
 
     ImGui::Begin("test");
+
     ImGui::Text("Hello");
     ImGui::Button("Button");
     ImGui::End();
@@ -30,8 +45,9 @@ int main() {
     EndDrawing();
   }
 
-  rlImGuiShutdown();
   CloseWindow();
+  gameClose();
+  rlImGuiShutdown();
 
   return 0;
 }
