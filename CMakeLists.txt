@@ -21,12 +21,14 @@ else()
 endif()
 
 # Ensure raylib is build as static
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build raylb as static librairies" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build raylib as static librairies" FORCE)
 
 project(mygame)
 
-# add raylib
+# add raylib, imGUI, rl-ImGui
 add_subdirectory(lib/raylib-5.0)
+add_subdirectory(lib/imgui-docking)
+add_subdirectory(lib/rl-imgui)
 
 # MY_SOURCES is defined to be a list of all the source files for my game 
 # DON'T ADD THE SOURCES BY HAND, they are already added with this macro
@@ -79,5 +81,5 @@ endif()
 target_include_directories("${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 # Link lib
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE raylib_static)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE raylib_static imgui rlimgui)
 
