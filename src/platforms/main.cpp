@@ -12,6 +12,14 @@ void configRaylib() {
   SetTargetFPS(240);
 }
 
+void imGUIDisplay() {
+  ImGui::Begin("test");
+
+  ImGui::Text("Hello");
+  ImGui::Button("Button");
+  ImGui::End();
+}
+
 int main() {
 #if PRODUCTION_BUILD == 1
   SetTraceLogLevel(LOG_NONE); // No log if production build
@@ -34,11 +42,7 @@ int main() {
       CloseWindow();
     }
 
-    ImGui::Begin("test");
-
-    ImGui::Text("Hello");
-    ImGui::Button("Button");
-    ImGui::End();
+    imGUIDisplay();
 
     rlImGuiEnd();
 
