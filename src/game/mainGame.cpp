@@ -1,4 +1,5 @@
 #include <mainGame.hpp>
+#include <assetsManager.hpp>
 
 #include <raylib.h>
 #include <iostream>
@@ -8,11 +9,19 @@ struct GameData {
   double positionX = 0;
   double positionY = 0;
   double movementSpeedPlayer = 200;
+
+  Texture TextureDirt;
 } gamedata;
+
+AssetsManager assetManager;
 
 GameData &getGameData() { return gamedata; }
 
-bool gameInit() { return true; }
+bool gameInit() {
+  assetManager.loadAll();
+
+  return true;
+}
 
 void handlePlayerMovement(double deltatime) {
   if (IsKeyDown(KEY_W))
@@ -31,8 +40,12 @@ bool gameUpdate() {
     deltatime = 1. * 5;
 
   handlePlayerMovement(deltatime);
-
   DrawRectangle(gamedata.positionX, gamedata.positionY, 50, 50, RED);
+
+  DrawTexturePro(assetManager.dirt,
+                 {0, 0, (float)assetManager.dirt.width, (float)assetManager.dirt.height},
+                 {50, 50, 50, 50}, {}, 0, WHITE);
+
   return true;
 }
 
