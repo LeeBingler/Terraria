@@ -10,9 +10,11 @@
 struct GameData {
   double positionX = 0;
   double positionY = 0;
-  double movementSpeedPlayer = 200;
+  const int movementSpeedPlayer = 7;
 
-  float blockSize = 32;
+  const float blockSize = 1;
+
+  Camera2D camera;
 
   MapGame mapGame;
 
@@ -30,18 +32,22 @@ bool gameInit() {
   gamedata.mapGame.getBlock(0, 0)->type = Block::dirt;
   gamedata.mapGame.getBlock(1, 1)->type = Block::dirt;
 
+  gamedata.camera.target = {0, 0};
+  gamedata.camera.zoom = 100;
+  gamedata.camera.rotation = 0;
+
   return true;
 }
 
-void handlePlayerMovement(double deltatime) {
-  if (IsKeyDown(KEY_W))
-    gamedata.positionY -= gamedata.movementSpeedPlayer * deltatime;
-  if (IsKeyDown(KEY_S))
-    gamedata.positionY += gamedata.movementSpeedPlayer * deltatime;
-  if (IsKeyDown(KEY_D))
-    gamedata.positionX += gamedata.movementSpeedPlayer * deltatime;
-  if (IsKeyDown(KEY_A))
-    gamedata.positionX -= gamedata.movementSpeedPlayer * deltatime;
+void handleCameraMovement(double deltatime) {
+  if (IsKeyDown(KEY_UP))
+    gamedata.camera.target.y -= gamedata.movementSpeedPlayer * deltatime;
+  if (IsKeyDown(KEY_DOWN))
+    gamedata.camera.target.y += gamedata.movementSpeedPlayer * deltatime;
+  if (IsKeyDown(KEY_RIGHT))
+    gamedata.camera.target.x += gamedata.movementSpeedPlayer * deltatime;
+  if (IsKeyDown(KEY_LEFT))
+    gamedata.camera.target.x -= gamedata.movementSpeedPlayer * deltatime;
 }
 
 void drawMap() {
@@ -67,13 +73,15 @@ bool gameUpdate() {
   if (deltatime > 1. * 5)
     deltatime = 1. * 5;
 
-  handlePlayerMovement(deltatime);
+  gamedata.camera.offset = {(float)(GetScreenWidth() / 2.0), (float)(GetScreenHeight() / 2.0)};
+
+  handleCameraMovement(deltatime);
+
+  BeginMode2D(gamedata.camera);
 
   drawMap();
 
-  // Player drawing
-  DrawRectangle(gamedata.positionX, gamedata.positionY, gamedata.blockSize, gamedata.blockSize,
-                RED);
+  EndMode2D();
 
   return true;
 }
