@@ -1,4 +1,4 @@
-#include "assetsManager.hpp"
-#include "raylib.h"
+#include <assetsManager.hpp>
+#include <raylib.h>
 
-void AssetsManager::loadAll() { dirt = LoadTexture(RESOURCES_PATH "dirt.png"); }
+void AssetsManager::loadAll() { blockTextures = LoadTexture(RESOURCES_PATH "textures.png"); }

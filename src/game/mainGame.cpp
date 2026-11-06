@@ -1,7 +1,8 @@
-#include <blocks.hpp>
 #include <mainGame.hpp>
 #include <mapGame.hpp>
 #include <assetsManager.hpp>
+#include <blocks.hpp>
+#include <helpers.hpp>
 
 #include <raylib.h>
 #include <iostream>
@@ -25,13 +26,19 @@ AssetsManager assetManager;
 GameData &getGameData() { return gamedata; }
 
 bool gameInit() {
+  // Assets
   assetManager.loadAll();
 
+  // Map
   gamedata.mapGame.create(30, 10);
 
   gamedata.mapGame.getBlock(0, 0)->type = Block::dirt;
-  gamedata.mapGame.getBlock(1, 1)->type = Block::dirt;
+  gamedata.mapGame.getBlock(1, 1)->type = Block::stone;
+  gamedata.mapGame.getBlock(2, 2)->type = Block::ice;
+  gamedata.mapGame.getBlock(3, 3)->type = Block::jar;
+  gamedata.mapGame.getBlock(4, 4)->type = Block::boneBricks;
 
+  // Camera
   gamedata.camera.target = {0, 0};
   gamedata.camera.zoom = 100;
   gamedata.camera.rotation = 0;
@@ -59,8 +66,7 @@ void drawMap() {
         float positionX = x * gamedata.blockSize;
         float positionY = y * gamedata.blockSize;
 
-        DrawTexturePro(assetManager.dirt,
-                       {0, 0, (float)assetManager.dirt.width, (float)assetManager.dirt.height},
+        DrawTexturePro(assetManager.blockTextures, getTextureAtlas(block.type, 0, 32, 32),
                        {positionX, positionY, gamedata.blockSize, gamedata.blockSize}, {}, 0,
                        WHITE);
       }
