@@ -16,6 +16,7 @@ struct GameData {
 
   const float blockSize = 1;
 
+  int blockType = Block::air;
   Camera2D camera;
 
   MapGame mapGame;
@@ -74,8 +75,29 @@ void handleMouseUpdateBlock(int blockX, int blockY) {
     auto block = gamedata.mapGame.getBlock(blockX, blockY);
 
     if (block)
-      block->type = Block::gold;
+      block->type = gamedata.blockType;
   }
+}
+
+void handleKeyboardBlock() {
+  if (IsKeyDown(KEY_ZERO))
+    gamedata.blockType = Block::air;
+  if (IsKeyDown(KEY_ONE))
+    gamedata.blockType = Block::gold;
+  if (IsKeyDown(KEY_TWO))
+    gamedata.blockType = Block::copperBlock;
+  if (IsKeyDown(KEY_THREE))
+    gamedata.blockType = Block::boneBench;
+  if (IsKeyDown(KEY_FOUR))
+    gamedata.blockType = Block::bricks;
+  if (IsKeyDown(KEY_FIVE))
+    gamedata.blockType = Block::grass;
+  if (IsKeyDown(KEY_SIX))
+    gamedata.blockType = Block::stone;
+  if (IsKeyDown(KEY_SEVEN))
+    gamedata.blockType = Block::copper;
+  if (IsKeyDown(KEY_EIGHT))
+    gamedata.blockType = Block::clay;
 }
 
 void drawMap() {
@@ -107,6 +129,7 @@ bool gameUpdate() {
   int blockY = (int)floor(worldPos.y);
 
   handleCameraMovement(deltatime);
+  handleKeyboardBlock();
   handleMouseUpdateBlock(blockX, blockY);
 
   BeginMode2D(gamedata.camera);
