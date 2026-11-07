@@ -61,6 +61,23 @@ void handleCameraMovement(double deltatime) {
   gamedata.camera.zoom += mouseWheelMovement;
 }
 
+void handleMouseUpdateBlock(int blockX, int blockY) {
+
+  if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+    auto block = gamedata.mapGame.getBlock(blockX, blockY);
+
+    if (block)
+      *block = {};
+  }
+
+  if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+    auto block = gamedata.mapGame.getBlock(blockX, blockY);
+
+    if (block)
+      block->type = Block::gold;
+  }
+}
+
 void drawMap() {
   for (int y = 0; y < gamedata.mapGame.h; ++y) {
     for (int x = 0; x < gamedata.mapGame.w; ++x) {
@@ -85,30 +102,18 @@ bool gameUpdate() {
 
   gamedata.camera.offset = {(float)(GetScreenWidth() / 2.0), (float)(GetScreenHeight() / 2.0)};
 
-  handleCameraMovement(deltatime);
-
   Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), gamedata.camera);
   int blockX = (int)floor(worldPos.x);
   int blockY = (int)floor(worldPos.y);
 
-  if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-    auto block = gamedata.mapGame.getBlock(blockX, blockY);
-
-    if (block)
-      *block = {};
-  }
-
-  if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
-    auto block = gamedata.mapGame.getBlock(blockX, blockY);
-
-    if (block)
-      block->type = Block::gold;
-  }
+  handleCameraMovement(deltatime);
+  handleMouseUpdateBlock(blockX, blockY);
 
   BeginMode2D(gamedata.camera);
 
   drawMap();
 
+  // Draw the frame on mouse position
   DrawTexturePro(
       assetManager.frame, {0, 0, (float)assetManager.frame.width, (float)assetManager.frame.height},
       {(float)blockX, (float)blockY, gamedata.blockSize, gamedata.blockSize}, {}, 0, WHITE);
