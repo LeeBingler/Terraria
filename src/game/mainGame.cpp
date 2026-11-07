@@ -1,3 +1,4 @@
+#include "blocks.hpp"
 #include <mainGame.hpp>
 #include <mapGame.hpp>
 #include <assetsManager.hpp>
@@ -89,6 +90,20 @@ bool gameUpdate() {
   Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), gamedata.camera);
   int blockX = (int)floor(worldPos.x);
   int blockY = (int)floor(worldPos.y);
+
+  if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+    auto block = gamedata.mapGame.getBlock(blockX, blockY);
+
+    if (block)
+      *block = {};
+  }
+
+  if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+    auto block = gamedata.mapGame.getBlock(blockX, blockY);
+
+    if (block)
+      block->type = Block::gold;
+  }
 
   BeginMode2D(gamedata.camera);
 
