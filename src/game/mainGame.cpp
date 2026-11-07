@@ -6,6 +6,7 @@
 #include <helpers.hpp>
 
 #include <raylib.h>
+#include <raymath.h>
 #include <iostream>
 #include <cmath>
 
@@ -101,8 +102,25 @@ void handleKeyboardBlock() {
 }
 
 void drawMap() {
-  for (int y = 0; y < gamedata.mapGame.h; ++y) {
-    for (int x = 0; x < gamedata.mapGame.w; ++x) {
+  // Get border of screen to render only what we see
+  Vector2 topLeftView = GetScreenToWorld2D({0, 0}, gamedata.camera);
+  Vector2 bottomRightView =
+      GetScreenToWorld2D({(float)GetScreenWidth(), (float)GetScreenHeight()}, gamedata.camera);
+
+  int startViewX = (int)floorf(topLeftView.x - 1);
+  int endViewX = (int)ceilf(bottomRightView.x - 1);
+  int startViewY = (int)floorf(topLeftView.y - 1);
+  int endViewY = (int)ceilf(bottomRightView.y - 1);
+
+  startViewX = Clamp(startViewX, 0, gamedata.mapGame.w - 1);
+  endViewX = Clamp(endViewX, 0, gamedata.mapGame.w - 1);
+
+  startViewY = Clamp(startViewY, 0, gamedata.mapGame.h - 1);
+  endViewY = Clamp(endViewY, 0, gamedata.mapGame.h - 1);
+
+  // Drawing map
+  for (int y = startViewY; y <= endViewY; ++y) {
+    for (int x = startViewX; x <= endViewX; ++x) {
       auto block = gamedata.mapGame.getBlockUnsafe(x, y);
 
       if (block.type != Block::air) {
