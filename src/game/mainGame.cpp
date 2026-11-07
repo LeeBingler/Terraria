@@ -6,7 +6,7 @@
 
 #include <raylib.h>
 #include <iostream>
-#include <sys/types.h>
+#include <cmath>
 
 struct GameData {
   double positionX = 0;
@@ -55,6 +55,9 @@ void handleCameraMovement(double deltatime) {
     gamedata.camera.target.x += gamedata.movementSpeedPlayer * deltatime;
   if (IsKeyDown(KEY_LEFT))
     gamedata.camera.target.x -= gamedata.movementSpeedPlayer * deltatime;
+
+  float mouseWheelMovement = GetMouseWheelMove();
+  gamedata.camera.zoom += mouseWheelMovement;
 }
 
 void drawMap() {
@@ -83,9 +86,17 @@ bool gameUpdate() {
 
   handleCameraMovement(deltatime);
 
+  Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), gamedata.camera);
+  int blockX = (int)floor(worldPos.x);
+  int blockY = (int)floor(worldPos.y);
+
   BeginMode2D(gamedata.camera);
 
   drawMap();
+
+  DrawTexturePro(
+      assetManager.frame, {0, 0, (float)assetManager.frame.width, (float)assetManager.frame.height},
+      {(float)blockX, (float)blockY, gamedata.blockSize, gamedata.blockSize}, {}, 0, WHITE);
 
   EndMode2D();
 
