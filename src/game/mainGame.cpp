@@ -42,6 +42,8 @@ bool gameInit() {
   gamedata.mapGame.getBlock(4, 4)->type = Block::boneBricks;
   gamedata.mapGame.getBlock(5, 5)->type = Block::woodLog;
 
+  gamedata.mapGame.getBlockBg(6, 6)->type = Block::blueRubyBlockWall;
+
   // Camera
   gamedata.camera.target = {0, 0};
   gamedata.camera.zoom = 100;
@@ -71,10 +73,20 @@ void handleMouseUpdateBlock(int blockX, int blockY) {
 
     if (block)
       *block = {};
+
+    block = gamedata.mapGame.getBlockBg(blockX, blockY);
+
+    if (block)
+      *block = {};
   }
 
   if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
-    auto block = gamedata.mapGame.getBlock(blockX, blockY);
+    Block *block = {};
+
+    if (gamedata.blockType < Block::BLOCK_BACKGROUND)
+      block = gamedata.mapGame.getBlock(blockX, blockY);
+    else
+      block = gamedata.mapGame.getBlockBg(blockX, blockY);
 
     if (block)
       block->type = gamedata.blockType;
@@ -89,7 +101,7 @@ void handleKeyboardBlock() {
   if (IsKeyDown(KEY_TWO))
     gamedata.blockType = Block::leaves;
   if (IsKeyDown(KEY_THREE))
-    gamedata.blockType = Block::boneBench;
+    gamedata.blockType = Block::rubyBlockWall;
   if (IsKeyDown(KEY_FOUR))
     gamedata.blockType = Block::bricks;
   if (IsKeyDown(KEY_FIVE))
@@ -123,13 +135,26 @@ void drawMap() {
   for (int y = startViewY; y <= endViewY; ++y) {
     for (int x = startViewX; x <= endViewX; ++x) {
       auto block = gamedata.mapGame.getBlockUnsafe(x, y);
+      auto blockBg = gamedata.mapGame.getBlockUnsafeBg(x, y);
       const float positionX = x * gamedata.blockSize;
       const float positionY = y * gamedata.blockSize;
+
+      // Drawing background block
+      if (blockBg.type != Block::air) {
+
+        DrawTexturePro(assetManager.blockTextures, getTextureAtlas(blockBg.type - 1, 0, 32, 32),
+                       {positionX, positionY, gamedata.blockSize, gamedata.blockSize}, {}, 0,
+                       WHITE);
+      }
+
+      // Drawing front block
       if (block.type != Block::air && block.type != Block::woodLog) {
 
         DrawTexturePro(assetManager.blockTextures, getTextureAtlas(block.type, 0, 32, 32),
                        {positionX, positionY, gamedata.blockSize, gamedata.blockSize}, {}, 0,
                        WHITE);
+
+        // Draw woolLog
       } else if (block.type == Block::woodLog) {
         const auto blockUp = gamedata.mapGame.getBlock(x, y - 1);
         const auto blockDown = gamedata.mapGame.getBlock(x, y + 1);

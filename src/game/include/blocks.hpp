@@ -58,9 +58,33 @@ struct Block {
     boneBookShelf,
     bonePlatform,
 
+    BLOCK_BACKGROUND,
+
+    // Block Background
+    dirtWall,
+    stoneWall,
+    woodPlankWall,
+    sandStoneWall,
+    bricksWall,
+    glassWall,
+    copperBlockWall,
+    ironBlockWall,
+    goldBlockWall,
+    snowWall,
+    sandWall,
+    stoneBrickWall,
+    rubyBlockWall,
+    egyptInscriptionWall,
+    blueRubyBlockWall,
+    plankWall,
+    snowBrickWall,
+    boneBrickWall,
+
     BLOCKS_COUNT,
 
   };
 
   std::uint16_t type = 0;
+
+  bool isBackground() { return type > Block::BLOCK_BACKGROUND; };
 };
