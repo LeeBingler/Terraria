@@ -142,7 +142,8 @@ void drawMap() {
       // Drawing background block
       if (blockBg.type != Block::air) {
 
-        DrawTexturePro(assetManager.blockTextures, getTextureAtlas(blockBg.type - 1, 0, 32, 32),
+        DrawTexturePro(assetManager.blockTextures,
+                       getTextureAtlas(blockBg.type - 1, blockBg.variation, 32, 32),
                        {positionX, positionY, gamedata.blockSize, gamedata.blockSize}, {}, 0,
                        WHITE);
       }
@@ -150,9 +151,9 @@ void drawMap() {
       // Drawing front block
       if (block.type != Block::air && block.type != Block::woodLog) {
 
-        DrawTexturePro(assetManager.blockTextures, getTextureAtlas(block.type, 0, 32, 32),
-                       {positionX, positionY, gamedata.blockSize, gamedata.blockSize}, {}, 0,
-                       WHITE);
+        DrawTexturePro(
+            assetManager.blockTextures, getTextureAtlas(block.type, block.variation, 32, 32),
+            {positionX, positionY, gamedata.blockSize, gamedata.blockSize}, {}, 0, WHITE);
 
         // Draw woolLog
       } else if (block.type == Block::woodLog) {
@@ -208,7 +209,7 @@ void drawMap() {
             tiles = 6;
         }
 
-        DrawTexturePro(assetManager.treeTextures, getTextureAtlas(tiles, 0, 32, 32),
+        DrawTexturePro(assetManager.treeTextures, getTextureAtlas(tiles, block.variation, 32, 32),
                        {positionX, positionY, gamedata.blockSize, gamedata.blockSize}, {}, 0,
                        WHITE);
       }
