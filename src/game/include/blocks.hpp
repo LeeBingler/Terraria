@@ -88,10 +88,7 @@ struct Block {
   std::uint16_t type = 0;
   std::uint16_t variation = 0;
 
-  Block() {
-    std::ranlux24_base seed(std::random_device{}());
-    variation = getRandomInt(seed, 0, 3);
-  };
+  Block() { variation = getRandomInt(0, 3); };
 
   bool isBackground() { return type > Block::BLOCK_BACKGROUND; };
 };
