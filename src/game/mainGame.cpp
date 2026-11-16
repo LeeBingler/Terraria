@@ -222,7 +222,7 @@ bool gameUpdate() {
   if (deltatime > 1. * 5)
     deltatime = 1. * 5;
 
-  gamedata.camera.offset = {(float)(GetScreenWidth() / 2.0), (float)(GetScreenHeight() / 2.0)};
+  gamedata.camera.offset = {GetScreenWidth() / 2.f, GetScreenHeight() / 2.f};
 
   Vector2 worldPos = GetScreenToWorld2D(GetMousePosition(), gamedata.camera);
   int blockX = (int)floor(worldPos.x);

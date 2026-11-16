@@ -1,7 +1,8 @@
 #pragma once
+#include <random>
 
-float getRandomFloat(float min, float max);
+float getRandomFloat(std::ranlux24_base &seed, float min, float max);
 
-int getRandomInt(int min, int max);
+int getRandomInt(std::ranlux24_base &seed, int min, int max);
 
 bool getRandomChance(float chance);
