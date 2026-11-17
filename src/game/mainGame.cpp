@@ -1,27 +1,29 @@
-#include "blocks.hpp"
 #include <mainGame.hpp>
 #include <mapGame.hpp>
 #include <assetsManager.hpp>
 #include <blocks.hpp>
 #include <helpers.hpp>
+#include <worldGenerator.hpp>
 
 #include <raylib.h>
 #include <raymath.h>
 #include <iostream>
 #include <cmath>
 
+#include <imgui.h>
+#include <rlImGui.h>
+
 struct GameData {
   double positionX = 0;
   double positionY = 0;
-  const int movementSpeedPlayer = 7;
-
   const float blockSize = 1;
 
   int blockType = Block::air;
+
   Camera2D camera;
+  float cameraSpeed = 1;
 
   MapGame mapGame;
-
 } gamedata;
 
 AssetsManager assetManager;
@@ -33,16 +35,7 @@ bool gameInit() {
   assetManager.loadAll();
 
   // Map
-  gamedata.mapGame.create(30, 10);
-
-  gamedata.mapGame.getBlock(0, 0)->type = Block::dirt;
-  gamedata.mapGame.getBlock(1, 1)->type = Block::stone;
-  gamedata.mapGame.getBlock(2, 2)->type = Block::ice;
-  gamedata.mapGame.getBlock(3, 3)->type = Block::jar;
-  gamedata.mapGame.getBlock(4, 4)->type = Block::boneBricks;
-  gamedata.mapGame.getBlock(5, 5)->type = Block::woodLog;
-
-  gamedata.mapGame.getBlockBg(6, 6)->type = Block::blueRubyBlockWall;
+  generateWorld(gamedata.mapGame, 1234);
 
   // Camera
   gamedata.camera.target = {0, 0};
@@ -54,13 +47,13 @@ bool gameInit() {
 
 void handleCameraMovement(double deltatime) {
   if (IsKeyDown(KEY_UP))
-    gamedata.camera.target.y -= gamedata.movementSpeedPlayer * deltatime;
+    gamedata.camera.target.y -= gamedata.cameraSpeed * deltatime;
   if (IsKeyDown(KEY_DOWN))
-    gamedata.camera.target.y += gamedata.movementSpeedPlayer * deltatime;
+    gamedata.camera.target.y += gamedata.cameraSpeed * deltatime;
   if (IsKeyDown(KEY_RIGHT))
-    gamedata.camera.target.x += gamedata.movementSpeedPlayer * deltatime;
+    gamedata.camera.target.x += gamedata.cameraSpeed * deltatime;
   if (IsKeyDown(KEY_LEFT))
-    gamedata.camera.target.x -= gamedata.movementSpeedPlayer * deltatime;
+    gamedata.camera.target.x -= gamedata.cameraSpeed * deltatime;
 
   float mouseWheelMovement = GetMouseWheelMove();
   gamedata.camera.zoom += mouseWheelMovement;
@@ -240,6 +233,12 @@ bool gameUpdate() {
   DrawTexturePro(
       assetManager.frame, {0, 0, (float)assetManager.frame.width, (float)assetManager.frame.height},
       {(float)blockX, (float)blockY, gamedata.blockSize, gamedata.blockSize}, {}, 0, WHITE);
+
+  ImGui::Begin("Game Control");
+
+  ImGui::SliderFloat("Camera Speed", &gamedata.cameraSpeed, 5, 30);
+
+  ImGui::End();
 
   EndMode2D();
 
