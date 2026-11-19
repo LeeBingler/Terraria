@@ -7,14 +7,18 @@ void generateWorld(MapGame &mapGame, int seed) {
   constexpr size_t w = 900;
   constexpr size_t h = 500;
 
-  constexpr int grassSize = 50;
-  constexpr int stoneSize = 380;
+  int grassSize = 50;
+  int stoneSize = 380;
 
   mapGame.create(w, h);
 
   std::ranlux24_base rng(seed);
 
   for (size_t x = 0; x < w; ++x) {
+
+    stoneSize += getRandomChance(rng, 0.5f) ? 1 : -1;
+    grassSize += getRandomChance(rng, 0.5f) ? 1 : -1;
+
     for (size_t y = 0; y < h; ++y) {
       Block b{};
 
