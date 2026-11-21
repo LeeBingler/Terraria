@@ -25,10 +25,11 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build raylib as static librairies" FORCE)
 
 project(mygame)
 
-# add raylib, imGUI, rl-ImGui
+# add raylib, imGUI, rl-ImGui, FastNoiseSIMD
 add_subdirectory(lib/raylib-5.0)
 add_subdirectory(lib/imgui-docking)
 add_subdirectory(lib/rl-imgui)
+add_subdirectory(lib/FastNoiseSIMD-0.7)
 
 # MY_SOURCES is defined to be a list of all the source files for my game 
 # DON'T ADD THE SOURCES BY HAND, they are already added with this macro
