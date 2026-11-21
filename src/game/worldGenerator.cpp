@@ -1,41 +1,8 @@
-#include "blocks.hpp"
-#include "randomGen.hpp"
-#include <random>
+#include <blocks.hpp>
 #include <worldGenerator.hpp>
 
-void getFall(int &fall, int &direction, int &height, std::ranlux24_base &rng) {
-
-  direction--;
-
-  if (direction > 0) {
-
-    if (fall == -1)
-      if (getRandomChance(rng, 0.25))
-        height--;
-
-    if (fall == -2) {
-      if (getRandomChance(rng, 0.25))
-        height--;
-      if (getRandomChance(rng, 0.25))
-        height--;
-    }
-
-    if (fall == 1)
-      if (getRandomChance(rng, 0.25))
-        height++;
-
-    if (fall == 2) {
-      if (getRandomChance(rng, 0.25))
-        height++;
-      if (getRandomChance(rng, 0.25))
-        height++;
-    }
-
-  } else {
-    fall = getRandomInt(rng, -2, 2);
-    direction = getRandomInt(rng, 5, 40);
-  }
-}
+#include <random>
+#include <FastNoiseSIMD.h>
 
 void generateWorld(MapGame &mapGame, int seed) {
   constexpr size_t w = 900;
@@ -45,18 +12,9 @@ void generateWorld(MapGame &mapGame, int seed) {
   int grassSize = 70;
   int stoneSize = 90;
 
-  int grassfall = getRandomInt(rng, -2, 2);
-  int stonefall = getRandomInt(rng, -2, 2);
-
-  int grassDirection = getRandomInt(rng, 5, 40);
-  int stoneDirection = getRandomInt(rng, 5, 40);
-
   mapGame.create(w, h);
 
   for (size_t x = 0; x < w; ++x) {
-
-    getFall(grassfall, grassDirection, grassSize, rng);
-    getFall(stonefall, stoneDirection, stoneSize, rng);
 
     if (grassSize < 50)
       grassSize = 50;
